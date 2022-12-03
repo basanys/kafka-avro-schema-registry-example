@@ -24,7 +24,7 @@ def make_consumer() -> DeserializingConsumer:
 
     # create a AvroDeserializer
     avro_deserializer = AvroDeserializer(schema_reg_client,
-                                        schemas.person_value_v1,
+                                        schemas.person_value_v2,
                                         lambda data, ctx: Person(**data))
 
     # create and return DeserializingConsumer

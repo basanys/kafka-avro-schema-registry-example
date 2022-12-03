@@ -48,7 +48,7 @@ def make_producer() -> SerializingProducer:
     schema_reg_client = SchemaRegistryClient({'url': os.environ['SCHEMA_REGISTRY_URL']})
 
     avro_serializer = AvroSerializer(schema_reg_client,
-                                    schemas.person_value_v1,
+                                    schemas.person_value_v2,
                                     lambda person, ctx: person.dict())
 
     return SerializingProducer({'bootstrap.servers': os.environ['BOOTSTRAP_SERVERS'],
@@ -82,7 +82,7 @@ async def create_people(cmd: CreatePeopleCommand):
     producer = make_producer()
 
     for _ in range(cmd.count):
-        person = Person(name=faker.name(), title=faker.job().title())
+        person = Person(first_name=faker.first_name(),last_name=faker.last_name(), title=faker.job().title())
         people.append(person)
         producer.produce(topic=os.environ['TOPICS_PEOPLE_AVRO_NAME'],
                         key=person.title.lower().replace(r's+', '-'),
